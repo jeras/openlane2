@@ -56,6 +56,9 @@
   rapidfuzz,
   ioplace-parser,
   poetry-core,
+  jinja2,
+  # NPM
+  netlistsvg
 }: let
   self = buildPythonPackage {
     pname = "openlane";
@@ -87,6 +90,7 @@
       tclFull
       surelog
       ruby
+      netlistsvg
     ];
 
     propagatedBuildInputs =
@@ -107,6 +111,7 @@
         klayout-pymod
         rapidfuzz
         ioplace-parser
+        jinja2
       ]
       ++ self.includedTools;
 
