@@ -68,7 +68,9 @@ if { [info exists ::env(VERILOG_FILES) ]} {
 hierarchy -check -top $::env(DESIGN_NAME) -nokeep_prints -nokeep_asserts
 yosys rename -top $::env(DESIGN_NAME)
 select -module $::env(DESIGN_NAME)
-catch {show -format dot -prefix $::env(STEP_DIR)/hierarchy}
+catch {show -format dot -colors 1 -width -prefix $::env(STEP_DIR)/hierarchy}
+catch {show -format svg -colors 1 -width -prefix $::env(STEP_DIR)/hierarchy}
+write_json "$::env(STEP_DIR)/hierarchy.json"
 select -clear
 
 if { $::env(SYNTH_ELABORATE_ONLY) } {
@@ -131,7 +133,10 @@ yosys_ol::ol_synth $::env(DESIGN_NAME) $report_dir
 delete t:\$print
 delete t:\$assert
 
-catch {show -format dot -prefix $::env(STEP_DIR)/primitive_techmap}
+catch {show -format dot -colors 1 -width -prefix $::env(STEP_DIR)/primitive_techmap}
+#catch {show -format svg -colors 1 -width -prefix $::env(STEP_DIR)/primitive_techmap}
+write_json "$::env(STEP_DIR)/primitive_techmap.json"
+
 opt
 opt_clean -purge
 
@@ -208,6 +213,8 @@ proc run_strategy {output script strategy_name {postfix_with_strategy 0}} {
     }
     write_verilog -noattr -noexpr -nohex -nodec -defparam $output
     write_json "$output.json"
+    catch {show -format dot -colors 1 -width -prefix $::env(STEP_DIR)/netlist}
+#    catch {show -format svg -colors 1 -width -prefix $::env(STEP_DIR)/netlist}
     design -reset
 }
 design -save checkpoint
